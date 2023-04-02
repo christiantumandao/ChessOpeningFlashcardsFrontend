@@ -4,6 +4,9 @@
 }
 
 
+.display-none {
+  display: none;
+}
 
 .App {
   text-align: center;
@@ -37,6 +40,7 @@
     background-color: grey;
 
     overflow-y: scroll;
+
 }
 
 #left-display {
@@ -55,31 +59,36 @@
 
 #left-display-header {
   width: 100%;
-  height: 10vh;
+  height: 7vh;
   max-height: 100px;
   min-height: 50px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-
-  border-top: 2px solid black;
-  border-left: 2px solid black;
-
-}
-
-#board {
-  height: 500;
-  width: 500;
-
-  
 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 
+  font-size: 2.5vh;
+
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+  border-radius: 5px;
+  
+
+}
+
+
+#board {
+  height: 500px;
+  width: 500px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
 
 }
@@ -94,20 +103,131 @@
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
+  padding-top: 1vh;
 
 }
 
 #board-buttons > button {
   border: none;
-  font-size: 25px;
+  font-size: 3.5vh;
   background-color: rgba(0,0,0,0);
-  border: 2px solid black;
+  border: 1px solid black;
   padding: .25em;
+
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 5px;
 }
 
 #board-buttons >button:hover {
   background-color: rgba(255,255,255,.5);
 }
+
+#right-display {
+  margin-left: 2vw;
+  width: 40%;
+  height: 80vh;
+
+  border: 2px solid black;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 5px;
+}
+
+#right-display-header {
+  height: 12%;
+  border-bottom: 1px solid black;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+#right-display-subheader {
+  height: 8%;
+  width: 100%;
+  border-bottom: 1px solid black;
+  
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  
+  
+}
+
+#right-display-subheader > button {
+  height: 100%;
+  border: none;
+  background-color: grey;
+
+
+
+}
+
+#right-display-subheader > button:hover {
+  background-color: rgba(255,255,255,.5);
+}
+
+#right-display #login-button {
+  width: 25%;
+}
+
+#right-display #explore-button {
+  border-right: 1px solid black;
+  width: 37.5%;
+}
+
+#right-display #search-button {
+  border-right: 1px solid black;
+  width: 37.5%;
+}
+
+.right-display-message-body {
+    height: 80%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+div > .app-description {
+  height: 75%;
+  width: 75%;
+  font-size: 4.5vh;
+  margin-top: 10%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+div #get-started {
+  font-size: 3.5vh;
+}
+
+.app-description p {
+  padding-bottom: 10%;
+}
+
+div > .tech-stack {
+  width: 75%;
+  height: 25%;
+  font-size: 2vh;
+  margin-bottom: 5%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+ 
+
+
+
+
 
 @media (max-height: 600px) {
   #title {
@@ -124,11 +244,11 @@
     width: 100%;
   }
   #title {
-    height: 5%;
+    height: 50px;
     width: 100%;
   }
   #body {
-    height: 180;
+    height: 180vh;
     width: 100%;
 
     display: flex;
@@ -142,35 +262,43 @@
   #left-display {
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
 
-    height: 80vh;
-    width: 100%;
-    background-color: white;
+    height: 95vh;
+    width: 500px;
+    min-width: 500px;
+    min-height: 600px;
+
   }
 
   #left-display-header {
     height: 10vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+
+    border: 2px solid black;
   }
 
+
   #board {
-    height: 85%;
-    width: 100%;
+    height: 500px;
+    width: 500px;
+    border: 2px solid black;
   }
 
   #board-buttons {
-    height: 10vh;
+    height: 5vh;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     background-color: red;
+    margin-top: 1vh;
+
   }
 }
 
 
 
-#right-display {
 
-  width: 40%;
-  height: 80vh;
 
-  border: 2px solid black;
-}
