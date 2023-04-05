@@ -15,6 +15,7 @@ function App() {
   const [colorOrientation, setOrientation] = useState('white');
   const [undoBool, setUndo] = useState(false);
 
+  const [leftDisplayHeader, setLeftDisplayHeader] = useState(['Play a move to begin',""]); // name, 
   const [rightDisplayHeader, setRightDisplayHeader] = useState('Chess Opening Flashcards');
   const [rightDisplaySubheader, setRightDisplaySubheader] = useState([]);
   const [rightDisplayTabs, setRightDisplayTabs] = useState([]); // MUST BE array to map properly
@@ -23,30 +24,44 @@ function App() {
 
   const [history, setHistory] = useState("");
   const [moveCount, setMoveCount] = useState(0);
+
+  const lichessApiPath_fen ="https://explorer.lichess.ovh/masters?fen= ";
   
-  useEffect(()=>{
-    console.log(history);
-  }, [history])
 
+  // USE EFFECTS
+
+  // updating the opening name under explore
   useEffect(() => {
-    let currFen = game.fen(); 
-    currFen = currFen.substring(0, currFen.length -6);
-    let url_fen = currFen.replaceAll(' ', "%20");
-    console.log("FEN:", currFen);
-
-    let axios_url = axios_base_url+"?moves="+url_fen;
-    console.log("url: ", axios_url);
-    
+    // make if else statement to not execute this if fen is chess init position
+    let currFen = game.fen();
+    let axios_url = lichessApiPath_fen+currFen;
+    axios(axios_url)
+    .then(response => {
+      console.log("move history", game.history());
+      if (response.data.opening.name!==null) {
+        let openingName  = response.data.opening.name;
+        setLeftDisplayHeader([openingName, ("eco: "+response.data.opening.eco)]);
+      }
+      
+  })
+    .catch(error => {
+      setLeftDisplayHeader(["",""])
+    });
   }, [game.fen()])
 
+
+// HANDLE METHODS
   const handleMove = (fromSquare, toSquare) => {
     try {
+      // updating game
       var newGame = new Chess(game.fen());
       var move = newGame.move({
           from: fromSquare,
           to: toSquare,
           promotion: 'q' 
       });
+
+      // changing history
       if (game.turn()==='w') {
         setHistory(history + " "+String(moveCount+1)+'. '+toSquare);
         setMoveCount(moveCount+1);
@@ -60,8 +75,6 @@ function App() {
     catch {
       console.log("move failed");
     }
-    
-  
 
   }
 
@@ -76,8 +89,13 @@ function App() {
     setGame(new Chess());
     setHistory('');
     setMoveCount(0);
+    setLeftDisplayHeader(['','']);
   }
 
+  const getButtonClass = () => {
+    if (leftDisplayHeader[1]==="") return "display-none";
+    else return "opening-btn btn-queue";
+  }
 
   return (
     <div className="App">
@@ -90,8 +108,16 @@ function App() {
           
             <div id="left-display">
 
+            <div id="opening-buttons">
+                    <button className={getButtonClass()}>Add to queue</button>
+            </div>
+
               <div id="left-display-header">
-                 { } 
+
+                    <p id="opening-name"> { leftDisplayHeader[0] }</p>
+                    <p id="opening-moves"> { leftDisplayHeader[1]}</p>
+
+                 
               </div>
 
               <div id="board" >
@@ -103,11 +129,7 @@ function App() {
                   onPieceDrop = { handleMove }
 
                   boardOrientation = { colorOrientation }
-                  
-                  showNotation = { true }
-     
-                  
-
+                  showNotation = { true }  
                  /> 
                 
               </div> 
@@ -115,7 +137,6 @@ function App() {
               <div id="board-buttons">
    
                 <button id="undo"
-                  onClick = { handleUndo }
                   >Undo</button>
 
                 <button id ="flip"

@@ -12,6 +12,7 @@
   text-align: center;
   
   height: 100vh;
+  
 }
 
 #title {
@@ -37,7 +38,7 @@
     align-items: center;
 
 
-    background-color: grey;
+    background-color: #DAD7D2;
 
     overflow-y: scroll;
 
@@ -55,9 +56,11 @@
   min-width: 500;
   max-width: 50%;
 
+
 }
 
 #left-display-header {
+  background-color:#6b9981;
   width: 100%;
   height: 7vh;
   max-height: 100px;
@@ -77,6 +80,42 @@
   
 
 }
+
+
+
+
+#opening-name {
+  font-size: 2.25vh;
+  height: 50%;
+}
+
+#opening-moves {
+  font-size: 1.75vh;
+  height: 50%;
+}
+
+#opening-buttons {
+    height: 10%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+
+}
+
+.opening-btn {
+  border: none;
+  background-color: transparent;
+
+  border: 1px solid black;
+  padding: 1em;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
 
 
 #board {
@@ -104,6 +143,8 @@
   justify-content: space-around;
   align-items: center;
   padding-top: 1vh;
+
+
 
 }
 
@@ -133,7 +174,8 @@
 }
 
 #right-display-header {
-  height: 12%;
+  background-color: #6b9981;
+  height: 10%;
   border-bottom: 1px solid black;
 
   display: flex;
@@ -159,14 +201,14 @@
 #right-display-subheader > button {
   height: 100%;
   border: none;
-  background-color: grey;
+  background-color: rgb(204, 158,158);
 
 
 
 }
 
 #right-display-subheader > button:hover {
-  background-color: rgba(255,255,255,.5);
+  background-color: rgba(204, 158, 158, 0.199);
 }
 
 #right-display #login-button {
@@ -240,7 +282,7 @@ div > .tech-stack {
 
 @media (max-width: 1000px) {
   #App {
-    height: 200vh;
+    height: 250vh;
     width: 100%;
   }
   #title {
@@ -248,12 +290,12 @@ div > .tech-stack {
     width: 100%;
   }
   #body {
-    height: 180vh;
+    height: 200vh;
     width: 100%;
 
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
 
     background-color: grey;
@@ -292,9 +334,12 @@ div > .tech-stack {
     height: 5vh;
     display: flex;
     flex-direction: row;
-    background-color: red;
     margin-top: 1vh;
 
+  }
+
+  #right-display {
+    width: 90vw;
   }
 }
 
