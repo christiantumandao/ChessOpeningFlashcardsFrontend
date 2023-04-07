@@ -39,7 +39,7 @@
 
 /** children are left-display and right-display*/
 #body {
-    height: 95%;
+    height: 100%;
     width: 100%;
     min-height:90%;
 
@@ -62,7 +62,7 @@
   align-items: center;
 
   height: 90%;
-  width: 500px;
+  width: 400px;
   min-height: 50vh;
   min-width: 500;
   max-width: 50%;
@@ -82,6 +82,7 @@
   justify-content: center;
   align-items: center;
 
+
   font-size: 2.5vh;
 
   border-top: 1px solid black;
@@ -92,13 +93,26 @@
 }
 
 #opening-name {
-  font-size: 2.25vh;
+  font-size: 1.5vw;
   height: 50%;
+  width: 100%;
+  overflow-x: scroll;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+
 }
 
 #opening-moves {
-  font-size: 1.75vh;
+  font-size: 2vh;
   height: 50%;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 #opening-buttons {
@@ -128,14 +142,14 @@
 
 
 #board {
-  height: 500px;
-  width: 500px;
+  height: 400px;
+  width: 400px;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border:2px solid black;
+
 
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
@@ -150,7 +164,7 @@
 
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   padding-top: 1vh;
 
@@ -163,9 +177,8 @@
   font-size: 2.5vh;
   background-color: rgba(0,0,0,0);
   border: 1px solid black;
-  padding: .25em;
-  height: 75%;
-  width: 30%;
+  height: 70%;
+  width: 25%;
   max-width: 30%;
 
 
@@ -189,6 +202,7 @@
 
 #right-display-header {
   background-color: rgba(107, 153, 129, 0.29);
+  font-size: 1.5vw;
   height: 10%;
   border-bottom: 1px solid black;
 
@@ -199,9 +213,12 @@
 }
 
 #right-display-subheader {
+  
   height: 8%;
   width: 100%;
+  min-height: 25px;
   border-bottom: 1px solid black;
+  background-color: rgba(107, 153, 129, 0.05);
   
 
   display: flex;
@@ -213,30 +230,43 @@
 }
 
 #right-display-subheader > button {
+  width: 25%;
   height: 100%;
   border: none;
-  background-color: var(--bodyBG);
+  font-size: 1.1vw;
+  background-color: rgba(107, 153, 129, 0.05);
+
+
+ 
 
 
 
 }
 
 #right-display-subheader > button:hover {
-  background-color: rgba(204, 158, 158, 0.199);
+  background-color: rgba(107, 153, 129, 0.29);
+
 }
 
+
 #right-display #login-button {
-  width: 25%;
+  width: 19%;
+}
+
+#right-display #flashcards-button {
+  border-right: 1px solid black;
+  width: 19%;
 }
 
 #right-display #explore-button {
   border-right: 1px solid black;
-  width: 37.5%;
+  width: 31%;
+  
 }
 
 #right-display #search-button {
   border-right: 1px solid black;
-  width: 37.5%;
+  width: 31%;
 }
 
 .right-display-message-body {
@@ -247,6 +277,111 @@
     justify-content: space-between;
     align-items: center;
 
+}
+
+.flashcards-config {
+  width: 100%;
+  height: 15%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+
+  border-bottom: 1px solid black;
+  padding-left: 1em;
+
+}
+
+.flashcards-config-text {
+  width: 20%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 1em;
+}
+
+.flashcards-config-color-buttons {
+  height: 75%;
+  width: 80%;
+  padding-left: 1em;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+
+.config-button {
+  width: 5vw;
+  max-width: 25%;
+  height: 60%;
+}
+
+.right-display-flashcards {
+  height: 82%;
+  width: 100%;
+  overflow-y: scroll;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.right-display-flashcard {
+  height: 15%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid black;
+}
+
+.flashcard-name {
+  height: 100%;
+  width: 100%;
+  font-size: 1.25vw;
+  font-weight: bold;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: .5em;
+
+}
+.flashcard-moves {
+  height: 100%;
+  width: 50%;
+  font-size: 1vw;
+  padding-left: 1em;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.right-display-message-body-noFlashcards {
+  height: 80%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 5vh;
+}
+
+.right-display-message-body-noFlashcards > h3 {
+  width: 80%;
+  font-size: 4vh;
+  padding-bottom: 1em;
+}
+.right-display-message-body-noFlashcards > p {
+  width: 80%;
+  font-size: 3vh;
 }
 
 div > .app-description {
@@ -320,8 +455,8 @@ div > .tech-stack {
     justify-content: flex-start;
 
     height: 95vh;
-    width: 500px;
-    min-width: 500px;
+    width: 400px;
+    min-width: 400px;
     min-height: 600px;
 
   }
@@ -338,8 +473,8 @@ div > .tech-stack {
 
 
   #board {
-    height: 500px;
-    width: 500px;
+    height: 400px;
+    width: 400px;
     border: 2px solid black;
   }
 

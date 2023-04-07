@@ -14,39 +14,16 @@ class rightDisplay extends Component {
 
                 {/**right display subheader */}
                 <div id ="right-display-subheader">
-                    <button id="explore-button">Explore Openings</button>
-                    <button id="search-button">Search Openings</button>
-                    <button id="login-button">Login/Register</button>
+                    <button id="flashcards-button" onClick = { () => this.props.handleFlashcards() }>Flashcards</button>
+                    <button id="explore-button" onClick= { () => this.props.handleExploreOpenings() }>Explore Openings</button>
+                    <button id="search-button" onClick = { () => this.props.handleSearchOpenings() }>Search Openings</button>
+                    <button id="login-button" onClick = { () => this.props.handleLoginRegister()}>Login</button>
                 </div>
 
-                {/** right display tabs */}
-                <div className = { this.getClasses("right-display-tabs") }>
-                    { 
-                        this.props.rightDisplayBody
-                    }
-                </div>
 
                 {/** right display message body */}
-                <div className = { this.getClasses('right-display-message-body')}>
-                    <div className="app-description">
-                        <p>
-                            Easily explore, study, and test yourself on chess openings
-                        </p>
-                        <p id="get-started">
-                            Start by playing a move or clicking the "Search Openings" tab.
-                        </p>
-                    </div>
-                    <div className="tech-stack">
-                        <p>
-                            This web application uses the lichess api for chess openings.
-                        </p>
-                        <p>
-                            Built on React, Axios, Spring Boot MVC, Spring data jpa, AWS RDS (mySQL), AWS S3, and AWS EBS
-                        </p>
-                        <p>Christian Tumandao</p>
-                    </div>
-                    
-                </div>
+                { this.props.rightDisplayBody}
+
 
             </React.Fragment>
         );

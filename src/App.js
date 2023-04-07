@@ -1,9 +1,10 @@
-import logo from './logo.svg';
+
 import './App.css';
-import { useMediaQuery } from 'react-responsive';
 import { useState, useEffect } from 'react';
 
 import RightDisplay from "./components/rightDisplay";
+import Flashcard from "./components/flashcard";
+import Flashcards from "./components/flashcards";
 import { Chessboard } from 'react-chessboard';
 import { Chess } from "chess.js";
 import axios from 'axios';
@@ -12,18 +13,19 @@ function App() {
 
   // game references
   const [game, setGame] = useState(new Chess());
-  const [gameQueue, setGameQueue] = useState([]);
+  const [flashcards, setFlashcards] = useState([]);
+  const [currOpening, setCurrOpening] = useState({});
 
   // game settings
   const [colorOrientation, setOrientation] = useState('white');
   const [undoBool, setUndo] = useState(false);
 
   // displays ================================================================
-  const [leftDisplayHeader, setLeftDisplayHeader] = useState(['Play a move to explore', ""]); // name, 
+  const [leftDisplayHeader, setLeftDisplayHeader] = useState(["Play a move to explore", ""]); // name, 
   const [rightDisplayHeader, setRightDisplayHeader] = useState('Chess Opening Flashcards');
-
-  const [rightDisplayTabs, setRightDisplayTabs] = useState([]); // MUST BE array to map properly
-  const [displayTabs, setDisplayTabs] = useState(false); // display tabs ? true : false
+  const [testMode, setTestMode] = useState(false);
+  const [currFlashcard, setCurrFlashcard]= useState({});
+  const [moveIndex, setMoveIndex] =useState(0);
 
 // ========================================================================
   
@@ -31,56 +33,110 @@ function App() {
   const lichessApiPath_fen ="https://explorer.lichess.ovh/masters?fen= ";
 
 
-  // USE EFFECTS
+  // USE EFFECTS: getting the opening name of what is played by user
+  useEffect(()=> {
 
-  // updating the opening name under explore
-    // updates when game position is changed [game.fen()]
-  useEffect(() => {
+    // only attempt to retrieve opening for curr position if curr position is NOT in start position
+    if (testMode===false && game.fen() !=="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1") {
+      
 
-    // make if else statement to not execute this if fen is chess init position
-    let currFen = game.fen();
-    let axios_url = lichessApiPath_fen+currFen;
-    axios(axios_url)
-    .then(response => {
-      if (response.data.opening.name!==null) {
-        let openingName  = response.data.opening.name;
-        let openingEco = response.data.opening.eco;
+      // mutating string to send proper request
+      let uri = String(game.fen());
+      let slicedUri = uri.slice(0, -6);
+      let outputString = slicedUri.replace(new RegExp('/', "g"), '-');
+      const encodedPathVariable = encodeURIComponent(outputString);
 
-        let hist = parseHistory(game.history());
+      // retrieving the opening for current position
+      let axios_url = "http://localhost:5000/api/openings/"+encodedPathVariable;
+      axios(axios_url )
+      .then(response => {
+        setLeftDisplayHeader([response.data.openingName, response.data.moves]);
+        setCurrOpening(response.data);
+      })
+      .catch(error => console.error(error));
+    }
+    else if (testMode===true && game.fen() !=="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" ) {
+      console.log("ondrop called");
+      let f = game.fen().slice(0, -6);
+      let moveHistory = game.history();
 
-        setLeftDisplayHeader([
-          String("[" + String(openingEco) + "] " + String(openingName)), 
-          hist
-        ]);
+      let moveCorrect=false;
+      let correctSequence = parseHistory(currFlashcard.moves);
+      console.log("move index:", moveIndex);
+      console.log("move made: ", moveHistory[moveIndex]);
+      console.log("move expected:", correctSequence[moveIndex]);
+
+      if (correctSequence[moveIndex]===moveHistory[moveIndex]) moveCorrect=true;
+
+      if (f==currFlashcard.fen) {
+        console.log("flashcard done!");
       }
-      
-      
-  })
-    .catch(error => {
-      let hist = parseHistory(game.history())
-      if (hist==="" || hist ===null) setLeftDisplayHeader(["Play a move to explore", hist]);
-      else setLeftDisplayHeader(["", hist]);
-
-    });
-
+      else if (moveCorrect===true) {
+        console.log("correct")
+      }
+      else if (moveCorrect===false) {
+        console.log("false")
+      }
+      setMoveIndex(moveIndex+1);
+    }
+    
   }, [game.fen()])
 
-
-  const parseHistory = (history) => {
-    var historyString = "";
-    var moveCount=1;
-    history.forEach( (e, i) => {
-      if (i % 2 ===0) {
-        historyString+=String(moveCount);
-        moveCount+=1;
-        historyString+=". ";
-      }
-      historyString+=e;
-      historyString+=" ";
+  const parseHistory = (hist) => {
+      let histArr = hist.split(" ");
+      let returnArr = [];
+      histArr.forEach(m => {
+        if (!m.includes('.')) returnArr.push(m);
       })
-      return historyString;
-    
+      return returnArr;
   }
+
+
+  const getDefaultMessage = () => {
+    return (
+      <div className = 'right-display-message-body'>
+                    <div className="app-description">
+                        <p>
+                            Easily explore, study, and test yourself on chess openings
+                        </p>
+                        <p id="get-started">
+                            Start by playing a move or clicking the "Search Openings" tab.
+                        </p>
+                    </div>
+                    <div className="tech-stack">
+                        <p>
+                            This web application uses the lichess api for chess openings.
+                        </p>
+                        <p>
+                            Built on React, Axios, Spring Boot MVC, Spring data jpa, AWS RDS (mySQL), AWS S3, and AWS EBS
+                        </p>
+                        <p>Christian Tumandao</p>
+                    </div>
+                    
+                </div>
+    );
+  }
+  const getNoFlashcards = () => {
+    return (
+      <div className ='right-display-message-body-noFlashcards'>
+          <h3>You have no flashcards added! </h3>
+          <p>Explore or search for openings and add them to use flashcards.</p>
+      </div>
+    );
+  }
+
+  const getFlashcards = () => {
+    return (
+      <div className="right-display-flashcards">
+        <Flashcards 
+        flashcards = { flashcards }
+        handleStart = { handleStart }
+        />
+      </div>
+      
+    );
+  }
+  const [rightDisplayBody, setRightDisplayBody] = useState(getDefaultMessage())
 
 
 // HANDLE METHODS
@@ -102,15 +158,27 @@ function App() {
       catch {
         console.log("err")
       }
-      
-
-
   }
 
+  const handleAddGame = (fen) => {
+
+    console.log("adding ",currOpening);
+    let newFlashcards = flashcards;
+    newFlashcards.push(currOpening);
+    setFlashcards(newFlashcards);
+    console.log("games:", flashcards);
+  }
+
+  useEffect(()=>{
+    console.log("flashcards: ",flashcards);
+  }, [flashcards])
+
+  // bottom left button handlers
   const swapOreintation = () => {
     if (colorOrientation==='white') setOrientation('black');
     else setOrientation('white');
   }
+
   const handleUndo =() => {
     try {
       let undoReturn = game.undo();
@@ -121,38 +189,73 @@ function App() {
 
       setGame(newGame);
       setUndo(true);
+      if (moveIndex>0) setMoveIndex(moveIndex-1);
     }
     catch {
-
-    }
-      
+      console.log("Swap failed.")
+    }  
   }
 
   const handleReset = () => {
     setGame(new Chess());
+    setMoveIndex(0);
     setLeftDisplayHeader(["Play a move to explore",""]);
   }
 
+  // getting button class for top left button (add to game queue)
   const getButtonClass = () => {
-    if (leftDisplayHeader[0]==="") return "display-none";
+    if (leftDisplayHeader[0]==="" || leftDisplayHeader[0]===undefined || leftDisplayHeader[0]==="Play a move to explore") return "display-none";
     else return "opening-btn btn-queue";
   }
 
-  const handleAddGame = (fen) => {
-    console.log("adding game to queue");
-    let gq = gameQueue;
-    gq.push(fen);
-    setGameQueue(gq);
-    console.log(gq);
+  // top right buttons 
+
+  const handleFlashcards = () => {
+    if (flashcards.length === 0) {
+      setRightDisplayBody(getNoFlashcards());
+      console.log("no flashcards")
+    }
+    else {
+      setRightDisplayBody(getFlashcards());
+    }
   }
+
+  const handleExploreOpenings = () => {
+    setRightDisplayBody(getDefaultMessage());
+    handleReset();
+  }
+
+  const handleSearchOpenings = () => {
+
+  }
+
+  const handleLoginRegister = () => {
+
+  }
+
+  const handleStart = (color) => {
+    console.log("STARTING AS", color);
+    handleReset();
+
+    setTestMode(true);
+    setMoveIndex(0);
+    console.log("AHHAH", flashcards);
+    testFlashcard(flashcards[0]);
+  }
+
+  const testFlashcard = (flashcard) => {
+    setCurrFlashcard(flashcard);
+   
+  }
+
+  useEffect(()=> {
+    setLeftDisplayHeader([currFlashcard.openingName]);
+    console.log("set display header as,", currFlashcard.openingName);
+  },[currFlashcard])
 
 
   return (
     <div className="App">
-
-          <div id="title">
-            <h1>Chess Opening Flashcards</h1>
-          </div>
 
           <div id="body">
           
@@ -164,7 +267,7 @@ function App() {
                         onClick = { ()=>handleAddGame(game.fen()) }
                       
                       >
-                        Add to queue</button>
+                        Add to flashcards</button>
               </div>
 
               <div id="left-display-header">
@@ -175,7 +278,7 @@ function App() {
               <div id="board" >
            
                <Chessboard 
-                  boardWidth={500} 
+                  boardWidth={400} 
 
                   position = { game.fen() }
                   onPieceDrop = { handleMove }
@@ -204,12 +307,17 @@ function App() {
 
             </div>
 
-
             <div id="right-display">
               <RightDisplay
                 rightDisplayHeader = { rightDisplayHeader }
-                rightDisplayTabs = { rightDisplayTabs }
-                displayTabs = { displayTabs }
+                rightDisplayBody = { rightDisplayBody }
+
+                // buttons 
+                handleFlashcards = { handleFlashcards }
+                handleExploreOpenings = { handleExploreOpenings }
+                handleSearchOpenings = { handleSearchOpenings }
+                handleLoginRegister ={ handleLoginRegister }
+                
               />
             </div>
 
