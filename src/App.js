@@ -23,6 +23,8 @@ function App() {
   // displays ================================================================
   const [leftDisplayHeader, setLeftDisplayHeader] = useState(["Play a move to explore", ""]); // name, 
   const [rightDisplayHeader, setRightDisplayHeader] = useState('Chess Opening Flashcards');
+
+
   const [testMode, setTestMode] = useState(false);
   const [currFlashcard, setCurrFlashcard]= useState({});
   const [moveIndex, setMoveIndex] =useState(0);
@@ -56,31 +58,47 @@ function App() {
       .catch(error => console.error(error));
     }
     else if (testMode===true && game.fen() !=="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" ) {
-      console.log("ondrop called");
+      console.log('scanning move...')
       let f = game.fen().slice(0, -6);
       let moveHistory = game.history();
 
-      let moveCorrect=false;
+      let moveCorrect;
       let correctSequence = parseHistory(currFlashcard.moves);
       console.log("move index:", moveIndex);
       console.log("move made: ", moveHistory[moveIndex]);
       console.log("move expected:", correctSequence[moveIndex]);
 
       if (correctSequence[moveIndex]===moveHistory[moveIndex]) moveCorrect=true;
+      else moveCorrect=false;
 
       if (f==currFlashcard.fen) {
+        displayBorder();
         console.log("flashcard done!");
       }
       else if (moveCorrect===true) {
         console.log("correct")
+      
+        setMoveIndex(moveIndex+1);
       }
       else if (moveCorrect===false) {
-        console.log("false")
+        console.log("false");
+        setMoveIndex(0);
+        setGame(new Chess());
+        
       }
-      setMoveIndex(moveIndex+1);
+      
     }
     
   }, [game.fen()])
+
+  const displayBorder = () => {
+    setShowBorder(true);
+    setTimeout(() => {
+      setShowBorder(false);
+    }, 1000);
+  };
+
+  const [showBorder, setShowBorder] = useState(false);
 
   const parseHistory = (hist) => {
       let histArr = hist.split(" ");
@@ -199,7 +217,7 @@ function App() {
   const handleReset = () => {
     setGame(new Chess());
     setMoveIndex(0);
-    setLeftDisplayHeader(["Play a move to explore",""]);
+    setLeftDisplayHeader(["",""]);
   }
 
   // getting button class for top left button (add to game queue)
@@ -233,24 +251,31 @@ function App() {
 
   }
 
+
+  /**
+   *  test mode has 3 variables:
+   *  moveIndex keeps track of the move number within the opening
+   *  currOpening is the opening object being tested on
+   *  testMode a boolean flag 
+   */
   const handleStart = (color) => {
     console.log("STARTING AS", color);
     handleReset();
 
     setTestMode(true);
     setMoveIndex(0);
-    console.log("AHHAH", flashcards);
     testFlashcard(flashcards[0]);
   }
 
   const testFlashcard = (flashcard) => {
+    setLeftDisplayHeader([flashcard.openingName]);
+    console.log("testing user on", flashcard.openingName);
     setCurrFlashcard(flashcard);
+    
    
   }
 
   useEffect(()=> {
-    setLeftDisplayHeader([currFlashcard.openingName]);
-    console.log("set display header as,", currFlashcard.openingName);
   },[currFlashcard])
 
 
@@ -270,7 +295,10 @@ function App() {
                         Add to flashcards</button>
               </div>
 
-              <div id="left-display-header">
+              <div id="left-display-header" 
+              style={{
+              backgroundColor: ` ${showBorder ? "rgba(69,203,133,0.29)" : " rgba(107, 153, 129, 0.29)"}`, // Set border color based on showBorder value
+              }}>
                     <p id="opening-name"> { leftDisplayHeader[0] }</p>
                     <p id="opening-moves"> { leftDisplayHeader[1] } </p>
               </div>
