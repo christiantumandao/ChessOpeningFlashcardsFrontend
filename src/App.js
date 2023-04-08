@@ -28,6 +28,8 @@ function App() {
   const [testMode, setTestMode] = useState(false);
   const [currFlashcard, setCurrFlashcard]= useState({});
   const [moveIndex, setMoveIndex] =useState(0);
+  const [flashcardPointer, setFlashcardPointer] = useState(0);
+  const [testColor, setTestColor] = useState("both");
 
 // ========================================================================
   
@@ -73,21 +75,58 @@ function App() {
 
       if (f==currFlashcard.fen) {
         displayBorder();
-        console.log("flashcard done!");
+        // going to next flashcard in deck
+        console.log("flashcard pointer", flashcardPointer, "flashcards length", flashcards.length);
+        if (flashcardPointer < flashcards.length-1) {
+           setFlashcardPointer(flashcardPointer+1);
+           setMoveIndex(0);
+           setGame(new Chess());
+        }
+        else { // last flash card done
+          setMoveIndex(0);
+          setFlashcardPointer(0);
+          setGame(new Chess());
+          setTestMode(false);
+          console.log("flashcard done!");
+        }
+       
       }
       else if (moveCorrect===true) {
         console.log("correct")
-      
+        let temp = moveIndex+1;
         setMoveIndex(moveIndex+1);
+
+        if (testColor==="black" && temp % 2 ===0) {
+            var newGame= new Chess();
+            newGame.loadPgn(game.pgn());
+            newGame.move(correctSequence[temp]);
+            setGame(newGame);  
+            setMoveIndex(moveIndex+1);   
+        }
+        else if (testColor==="white" && temp % 2 !== 0) {
+            var newGame= new Chess();
+            newGame.loadPgn(game.pgn());
+            newGame.move(correctSequence[temp]);
+            setGame(newGame);  
+            setMoveIndex(moveIndex+1);   
+        }
       }
       else if (moveCorrect===false) {
         console.log("false");
         setMoveIndex(0);
         setGame(new Chess());
         
-      }
-      
+      }     
     }
+    else if (testMode===true && testColor==="black") {
+      console.log("CATCH");
+      let correctSequence = parseHistory(currFlashcard.moves);
+      console.log("correct sequence first move", correctSequence[0]);
+      let newGame = new Chess();
+      newGame.move(correctSequence[0]);
+      setGame(newGame);
+    }
+    
     
   }, [game.fen()])
 
@@ -264,19 +303,28 @@ function App() {
 
     setTestMode(true);
     setMoveIndex(0);
-    testFlashcard(flashcards[0]);
+    setTestColor(color);
+    testFlashcard(flashcards[flashcardPointer]);
   }
 
   const testFlashcard = (flashcard) => {
-    setLeftDisplayHeader([flashcard.openingName]);
-    console.log("testing user on", flashcard.openingName);
-    setCurrFlashcard(flashcard);
+    
+    if (flashcard!== undefined) {
+      console.log("testing flashcard", flashcard);
+      setLeftDisplayHeader([flashcard.openingName]);
+      console.log("flahscard pointer",flashcardPointer,"testing user on", flashcard.openingName);
+      setCurrFlashcard(flashcard);   
+    }
+   
     
    
   }
 
-  useEffect(()=> {
-  },[currFlashcard])
+
+  useEffect(() => {
+    testFlashcard(flashcards[flashcardPointer]);
+  }, [flashcardPointer])
+
 
 
   return (

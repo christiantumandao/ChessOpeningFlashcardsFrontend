@@ -13,7 +13,7 @@ class Flashcards extends Component {
             <React.Fragment>
                 
                 <div className="flashcards-config">
-                        <h3 className="flashcards-config-text">Start as </h3>
+                        <h3 className="flashcards-config-text">Play as </h3>
                         <div className="flashcards-config-buttons">
                             <button className="config-button" onClick={()=>this.props.handleStart("white")}>White</button>
                             <button className="config-button" onClick={()=>this.props.handleStart("black")}>Black</button>

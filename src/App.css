@@ -302,20 +302,18 @@
   padding-left: 1em;
 }
 
-.flashcards-config-color-buttons {
-  height: 75%;
-  width: 80%;
-  padding-left: 1em;
-
+.flashcards-config-buttons {
+  width: 50%;
+  height: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
   align-items: center;
+  justify-content: flex-start;
 }
 
 
 .config-button {
-  width: 5vw;
+  width: 33%;
   max-width: 25%;
   height: 60%;
 }
@@ -467,9 +465,26 @@ div > .tech-stack {
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    font-size: 2vw;
 
     border: 2px solid black;
   }
+
+  #opening-name {
+    font-size: 2.5vw;
+  }
+
+
+
+  #right-display-subheader > button{
+    font-size: 2vw;
+  }
+
+  #right-display-header {
+    font-size: 3vw;
+  }
+
+
 
 
   #board {
@@ -489,6 +504,31 @@ div > .tech-stack {
   #right-display {
     width: 90vw;
     height: 100vh;
+  }
+
+  .flashcard-name {
+    height: 100%;
+    width: 100%;
+    font-size: 2.5vw;
+    font-weight: bold;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: .5em;
+  }
+
+  .flashcard-moves {
+    height: 100%;
+    width: 50%;
+    font-size: 2vw;
+    padding-left: 1em;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
   }
 }
 
