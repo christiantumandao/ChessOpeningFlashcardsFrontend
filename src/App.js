@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 import RightDisplay from "./components/rightDisplay";
 import Flashcard from "./components/flashcard";
 import Flashcards from "./components/flashcards";
+import SearchOpenings from './components/searchOpenings';
+import DefaultMessage from './components/defaultMessage';
 import { Chessboard } from 'react-chessboard';
 import { Chess } from "chess.js";
 import axios from 'axios';
@@ -23,32 +25,31 @@ function App() {
   // displays ================================================================
   const [leftDisplayHeader, setLeftDisplayHeader] = useState(["Play a move to explore", ""]); // name, 
   const [rightDisplayHeader, setRightDisplayHeader] = useState('Chess Opening Flashcards');
+  // rightDisplayBody 
 
-
+  // testMove
   const [testMode, setTestMode] = useState(false);
   const [currFlashcard, setCurrFlashcard]= useState({});
-  const [moveIndex, setMoveIndex] =useState(0);
   const [flashcardPointer, setFlashcardPointer] = useState(0);
-  const [testColor, setTestColor] = useState("both");
+  const [moveIndex, setMoveIndex] =useState(0);
+  const [testColor, setTestColor] = useState("white");
+  const [showBorder, setShowBorder] = useState(false);
 
-// ========================================================================
+  // functions ===============================================================
   
 
-  const lichessApiPath_fen ="https://explorer.lichess.ovh/masters?fen= ";
-
-
-  // USE EFFECTS: getting the opening name of what is played by user
+  // USE EFFECTS: called for every change in board position / reset
   useEffect(()=> {
 
-    // only attempt to retrieve opening for curr position if curr position is NOT in start position
+    // Move was made while NOT in testMode and not in root position
     if (testMode===false && game.fen() !=="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1") {
-      
+      // RETRIEVE OPENING NAME FOR CURRENT POSITION
 
-      // mutating string to send proper request
-      let uri = String(game.fen());
-      let slicedUri = uri.slice(0, -6);
-      let outputString = slicedUri.replace(new RegExp('/', "g"), '-');
-      const encodedPathVariable = encodeURIComponent(outputString);
+      // configuring string to format into uri
+      let uri = String(game.fen()); // getting fen
+      let slicedUri = uri.slice(0, -6);   //cutting out footer of FEN
+      let outputString = slicedUri.replace(new RegExp('/', "g"), '-'); // replace every backslash w/ hyphen
+      const encodedPathVariable = encodeURIComponent(outputString); // replace spaces with %20
 
       // retrieving the opening for current position
       let axios_url = "http://localhost:5000/api/openings/"+encodedPathVariable;
@@ -59,6 +60,8 @@ function App() {
       })
       .catch(error => console.error(error));
     }
+
+    // Move was made or board was reset under testMode
     else if (testMode===true && game.fen() !=="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" ) {
       console.log('scanning move...')
       let f = game.fen().slice(0, -6);
@@ -66,43 +69,63 @@ function App() {
 
       let moveCorrect;
       let correctSequence = parseHistory(currFlashcard.moves);
-      console.log("move index:", moveIndex);
-      console.log("move made: ", moveHistory[moveIndex]);
-      console.log("move expected:", correctSequence[moveIndex]);
 
       if (correctSequence[moveIndex]===moveHistory[moveIndex]) moveCorrect=true;
       else moveCorrect=false;
 
+      // if got the last correct move and finished currFlashcard
       if (f==currFlashcard.fen) {
         displayBorder();
         // going to next flashcard in deck
-        console.log("flashcard pointer", flashcardPointer, "flashcards length", flashcards.length);
+
+        // starting new flashcard
         if (flashcardPointer < flashcards.length-1) {
            setFlashcardPointer(flashcardPointer+1);
            setMoveIndex(0);
            setGame(new Chess());
         }
-        else { // last flash card done
+
+        // last flash card done
+        else { 
           setMoveIndex(0);
           setFlashcardPointer(0);
+          setCurrFlashcard({});
           setGame(new Chess());
           setTestMode(false);
-          console.log("flashcard done!");
+          setLeftDisplayHeader(["",""]);
+
+          setRightDisplayBody(getFlashcards());
+          console.log("flashcards done!");
         }
        
       }
+
+      // made correct move INSIDE opening
       else if (moveCorrect===true) {
-        console.log("correct")
+        console.log("Move correct");
         let temp = moveIndex+1;
         setMoveIndex(moveIndex+1);
 
+        // if user playing as black made correct move
         if (testColor==="black" && temp % 2 ===0) {
+          if (flashcardPointer !== flashcards.length-1) {
             var newGame= new Chess();
             newGame.loadPgn(game.pgn());
             newGame.move(correctSequence[temp]);
             setGame(newGame);  
             setMoveIndex(moveIndex+1);   
+          }
+          // if last move in opening is autoplayed
+          else if (flashcardPointer === flashcards.length-1)
+            setTimeout(() => {
+              var newGame= new Chess();
+              newGame.loadPgn(game.pgn());
+              newGame.move(correctSequence[temp]);
+              setGame(newGame);  
+              setMoveIndex(moveIndex+1);                 
+            }, 1000)
         }
+        //if user playing as white made correct move
         else if (testColor==="white" && temp % 2 !== 0) {
             var newGame= new Chess();
             newGame.loadPgn(game.pgn());
@@ -110,25 +133,27 @@ function App() {
             setGame(newGame);  
             setMoveIndex(moveIndex+1);   
         }
+
       }
+      // made mistake
       else if (moveCorrect===false) {
-        console.log("false");
+        console.log("Move incorrect. Restarting...");
         setMoveIndex(0);
         setGame(new Chess());
-        
-      }     
+      }    
+    // init move testing as black
     }
-    else if (testMode===true && testColor==="black") {
-      console.log("CATCH");
-      let correctSequence = parseHistory(currFlashcard.moves);
-      console.log("correct sequence first move", correctSequence[0]);
-      let newGame = new Chess();
-      newGame.move(correctSequence[0]);
-      setGame(newGame);
+    else if (testMode===true && testColor==="black" && game.fen()==="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1") {
+      setTimeout(() => {
+        let correctSequence = parseHistory(currFlashcard.moves);
+        let newGame = new Chess();
+        newGame.move(correctSequence[0]);
+        setGame(newGame);
+      }, 750);
     }
     
     
-  }, [game.fen()])
+  }, [game.fen(), testColor])
 
   const displayBorder = () => {
     setShowBorder(true);
@@ -136,8 +161,6 @@ function App() {
       setShowBorder(false);
     }, 1000);
   };
-
-  const [showBorder, setShowBorder] = useState(false);
 
   const parseHistory = (hist) => {
       let histArr = hist.split(" ");
@@ -148,29 +171,14 @@ function App() {
       return returnArr;
   }
 
+  // GET DISPLAY BODIES
+  
 
   const getDefaultMessage = () => {
     return (
       <div className = 'right-display-message-body'>
-                    <div className="app-description">
-                        <p>
-                            Easily explore, study, and test yourself on chess openings
-                        </p>
-                        <p id="get-started">
-                            Start by playing a move or clicking the "Search Openings" tab.
-                        </p>
-                    </div>
-                    <div className="tech-stack">
-                        <p>
-                            This web application uses the lichess api for chess openings.
-                        </p>
-                        <p>
-                            Built on React, Axios, Spring Boot MVC, Spring data jpa, AWS RDS (mySQL), AWS S3, and AWS EBS
-                        </p>
-                        <p>Christian Tumandao</p>
-                    </div>
-                    
-                </div>
+            <DefaultMessage />
+      </div>
     );
   }
   const getNoFlashcards = () => {
@@ -181,10 +189,79 @@ function App() {
       </div>
     );
   }
+  const [rightDisplayBody, setRightDisplayBody] = useState(getDefaultMessage());
+
+  const getDeck = () => {
+    return (
+      <div className="right-display-flashcards">
+          {
+                flashcards.map(flashcard=> (
+                    <div className="right-display-flashcard deck-flashcard" key ={flashcard.eco}>
+                        <Flashcard 
+                            openingName = {flashcard.openingName}
+                            eco = {flashcard.eco}
+                        />
+                    </div>
+                ))
+            }
+      </div>
+    );
+  }
+
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+  })
+  const handleSubmit = () => {
+    console.log("handing submit");
+  }
+  const handleChange =()=>{
+  }
+  const getLoginRegistrationGUI = () => {
+    return (
+      
+      <div class="right-display-message-body login-registration-gui">
+        <div className="login-title">
+          <div>Don't have an account? Register:</div>
+          <button>Register</button>
+        </div>
+        <form 
+            className="login-registration-gui-form"
+            onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            placeholder="Username"
+          />
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            placeholder="Password"
+          />
+          <button type="submit">Login</button>
+        </form>
+
+      </div>
+    );
+  }
 
   const getFlashcards = () => {
     return (
       <div className="right-display-flashcards">
+         <div className="flashcards-config">
+                        <h3 className="flashcards-config-text">Play as </h3>
+                        <div className="flashcards-config-buttons">
+                            <button className="config-button" onClick={()=>handleStart("white")}>White</button>
+                            <button className="config-button" onClick={()=>handleStart("black")}>Black</button>
+                            <button className="config-button" onClick={()=>handleStart("both")}>Both</button>
+                        </div>
+                </div>
         <Flashcards 
         flashcards = { flashcards }
         handleStart = { handleStart }
@@ -193,7 +270,46 @@ function App() {
       
     );
   }
-  const [rightDisplayBody, setRightDisplayBody] = useState(getDefaultMessage())
+
+
+  const getRightDisplay = () => {
+    return (
+      <div id="right-display">
+        {/**right display header */}
+        <div id ="right-display-header">
+            {
+                 rightDisplayHeader
+            }
+        </div>
+
+        {/**right display subheader */}
+        <div id ="right-display-subheader">
+            <button id="flashcards-button" onClick = { () => handleFlashcards() }>Flashcards</button>
+            <button id="explore-button" onClick= { () => handleExploreOpenings() }>Explore Openings</button>
+            <button id="search-button" onClick = { () => handleSearchOpenings() }>Search Openings</button>
+            <button id="login-button" onClick = { () => handleLoginRegister()}>Login</button>
+        </div>
+
+
+        {/** right display message body */}
+        <div className="right-display-body">
+          { rightDisplayBody}
+        </div>
+
+    </div>
+    );
+  }
+
+  const getSearchOpenings = () => {
+    return (
+      <div className="search-openings">
+        <SearchOpenings 
+            handleAddGame = { handleAddGame }
+        />
+      </div>
+      
+    );
+  }
 
 
 // HANDLE METHODS
@@ -213,22 +329,20 @@ function App() {
         setGame(newGame);  
       }
       catch {
-        console.log("err")
+        console.log("Invalid move!")
       }
   }
 
-  const handleAddGame = (fen) => {
+  //add opening to flashcards (object w/ 4 pairs)
+  const handleAddGame = () => {
 
-    console.log("adding ",currOpening);
+    console.log("adding opening:",currOpening);
     let newFlashcards = flashcards;
     newFlashcards.push(currOpening);
     setFlashcards(newFlashcards);
-    console.log("games:", flashcards);
   }
 
-  useEffect(()=>{
-    console.log("flashcards: ",flashcards);
-  }, [flashcards])
+
 
   // bottom left button handlers
   const swapOreintation = () => {
@@ -268,9 +382,10 @@ function App() {
   // top right buttons 
 
   const handleFlashcards = () => {
+    setTestMode(false);
+    handleReset();
     if (flashcards.length === 0) {
       setRightDisplayBody(getNoFlashcards());
-      console.log("no flashcards")
     }
     else {
       setRightDisplayBody(getFlashcards());
@@ -278,46 +393,68 @@ function App() {
   }
 
   const handleExploreOpenings = () => {
+    setTestMode(false);
+    handleReset();
     setRightDisplayBody(getDefaultMessage());
+    
+  }
+
+  useEffect(()=> {
+    console.log(rightDisplayBody);
+  },[rightDisplayBody, testMode])
+
+  const handleSearchOpenings = () => {
+    setTestMode(false);
+    setRightDisplayBody(getSearchOpenings());
     handleReset();
   }
 
-  const handleSearchOpenings = () => {
-
-  }
-
   const handleLoginRegister = () => {
-
+    setTestMode(false);
+    handleReset();
+    setRightDisplayBody(getLoginRegistrationGUI());
   }
 
 
   /**
-   *  test mode has 3 variables:
+   *  test mode has 4 variables:
+   *  testMode a boolean flag 
    *  moveIndex keeps track of the move number within the opening
    *  currOpening is the opening object being tested on
-   *  testMode a boolean flag 
+   *  
+   *  references flashcards
    */
   const handleStart = (color) => {
-    console.log("STARTING AS", color);
-    handleReset();
 
+    if (color==="white") {setTestColor("white");}
+    else if (color==="black") {setTestColor("black");}
+    else {setTestColor("both");}
+
+    if (color==="black") {setOrientation("black");}
+    else {setOrientation("white");}
+
+    setFlashcardPointer(0);
+    setMoveIndex(0);
+    handleReset();
     setTestMode(true);
     setMoveIndex(0);
-    setTestColor(color);
-    testFlashcard(flashcards[flashcardPointer]);
+
+    setRightDisplayBody(getDeck());
+
+    testFlashcard(flashcards[0]);
   }
+
+
 
   const testFlashcard = (flashcard) => {
     
     if (flashcard!== undefined) {
-      console.log("testing flashcard", flashcard);
       setLeftDisplayHeader([flashcard.openingName]);
-      console.log("flahscard pointer",flashcardPointer,"testing user on", flashcard.openingName);
       setCurrFlashcard(flashcard);   
+      let newGame = new Chess();
+      setGame(newGame);
     }
-   
-    
-   
+
   }
 
 
@@ -325,8 +462,7 @@ function App() {
     testFlashcard(flashcards[flashcardPointer]);
   }, [flashcardPointer])
 
-
-
+  
   return (
     <div className="App">
 
@@ -383,19 +519,8 @@ function App() {
 
             </div>
 
-            <div id="right-display">
-              <RightDisplay
-                rightDisplayHeader = { rightDisplayHeader }
-                rightDisplayBody = { rightDisplayBody }
-
-                // buttons 
-                handleFlashcards = { handleFlashcards }
-                handleExploreOpenings = { handleExploreOpenings }
-                handleSearchOpenings = { handleSearchOpenings }
-                handleLoginRegister ={ handleLoginRegister }
-                
-              />
-            </div>
+            {/**under id=right-display */}
+             { getRightDisplay() }
 
           </div>
 

@@ -200,6 +200,11 @@
   border-radius: 5px;
 }
 
+.right-display-body{
+  width: 100%;
+  height: 82%;
+}
+
 #right-display-header {
   background-color: rgba(107, 153, 129, 0.29);
   font-size: 1.5vw;
@@ -282,28 +287,28 @@
 .flashcards-config {
   width: 100%;
   height: 15%;
+  min-height: 15%;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
 
   border-bottom: 1px solid black;
-  padding-left: 1em;
 
 }
 
 .flashcards-config-text {
-  width: 20%;
+  width: 15%;
   height: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
-  padding-left: 1em;
+  justify-content: center;
 }
 
 .flashcards-config-buttons {
   width: 50%;
+  min-width: 50%;
   height: 100%;
   display: flex;
   flex-direction: row;
@@ -315,6 +320,8 @@
 .config-button {
   width: 33%;
   max-width: 25%;
+  min-height: 25%;
+  max-height: 25;
   height: 60%;
 }
 
@@ -331,6 +338,8 @@
 
 .right-display-flashcard {
   height: 15%;
+  min-height: 15%;
+  max-height:15;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -339,8 +348,8 @@
 
 .flashcard-name {
   height: 100%;
-  width: 100%;
-  font-size: 1.25vw;
+  width: 60%;
+  font-size: 1vw;
   font-weight: bold;
 
   display: flex;
@@ -360,6 +369,62 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+}
+
+.login-registration-gui {
+  height:82%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+}
+
+.login-title {
+  height: 30%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end; 
+
+}
+.login-title > div {
+  height: 25%;
+}
+.login-title >button {
+  height: 15%;
+
+  padding: .75em;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+}
+
+
+.login-registration-gui-form {
+  height: 60%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content:flex-start;
+  align-items: center;
+}
+
+.login-registration-gui-form > input {
+  margin: 1em;
+  border-radius: 5px;
+  height: 10%;
+  width: 30%;
+  
+}
+
+.login-registration-gui-form> button {
+  border: none;
+  height: 10%;
+  width: 30%;
 }
 
 .right-display-message-body-noFlashcards {
@@ -413,6 +478,81 @@ div > .tech-stack {
   align-items: center;
 }
  
+.search-openings {
+  height: 100%;
+  width: 100%;
+}
+
+.search-bar-container {
+  height: 15%;
+  width: 100%;
+
+  
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.search-bar-container > input {
+  height: 60%;
+  width: 90%;
+  border: none;
+  border: 1px solid black;
+  border-radius: 3px;
+  padding-left: 1em;
+  font-size: 1em;
+  background-color: rgba(107, 153, 129, 0.05);
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+}
+
+.search-results {
+  height: 84.5%;
+  width: 100%;
+  overflow-y: scroll;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+
+
+}
+
+.search-result {
+  height: 20%;
+  min-height: 20%;
+  width: 90%;
+  margin-bottom: 2%;
+
+  border: 1px solid rgba(255, 255,255, 0.3);
+  border-radius: 8px;
+  box-shadow: 0 1px 12px rgba(0, 0, 0, 0.25);
+  background-color: rgba(255,255,255,0.3);
+  backdrop-filter: blur(20px);
+
+  display: flex;
+  flex-direction:row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0.5em;
+
+
+}
+
+.search-result > div {
+  font-size: 2.5vh;
+}
+.search-result button {
+  font-size: 2vh;
+  padding: 0.5em;
+  border: 1px solid black;
+  border-radius: 5px;
+  background-color: rgba(107, 153, 129, 0.05);
+ 
+}
 
 
 

@@ -4,7 +4,6 @@ class rightDisplay extends Component {
     render() { 
         return (
             <React.Fragment>
-
                 {/**right display header */}
                 <div id ="right-display-header">
                     {
@@ -23,8 +22,6 @@ class rightDisplay extends Component {
 
                 {/** right display message body */}
                 { this.props.rightDisplayBody}
-
-
             </React.Fragment>
         );
     }
