@@ -176,9 +176,7 @@ function App() {
 
   const getDefaultMessage = () => {
     return (
-      <div className = 'right-display-message-body'>
-            <DefaultMessage />
-      </div>
+      <DefaultMessage />
     );
   }
   const getNoFlashcards = () => {
@@ -219,13 +217,58 @@ function App() {
   }
   const handleChange =()=>{
   }
+  const getRegistrationGUI = () => {
+    return (
+      <div className="registration-gui">
+        <form 
+            className="registration-gui-form"
+            onSubmit={handleSubmit}>
+              Registration
+          <input
+            type="text"
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleChange}
+            placeholder="First Name"
+          />
+          <input
+            type="text"
+            name="lastName"
+            value={formData.lastName}
+            onChange={handleChange}
+            placeholder="Last Name"
+          />
+          <input
+            type="text"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            placeholder="Username"
+          />
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            placeholder="Password"
+          />
+          <div className="register-submit-button">
+          <button  type="submit">Register</button>
+            </div>
+        </form>
+      </div>
+    );
+  }
+  const handleRegister = () =>{
+    setRightDisplayBody(getRegistrationGUI());
+  }
   const getLoginRegistrationGUI = () => {
     return (
       
       <div class="right-display-message-body login-registration-gui">
         <div className="login-title">
           <div>Don't have an account? Register:</div>
-          <button>Register</button>
+          <button onClick={ handleRegister }>Register</button>
         </div>
         <form 
             className="login-registration-gui-form"
@@ -255,13 +298,11 @@ function App() {
     return (
       <div className="right-display-flashcards">
          <div className="flashcards-config">
-                        <h3 className="flashcards-config-text">Play as </h3>
-                        <div className="flashcards-config-buttons">
-                            <button className="config-button" onClick={()=>handleStart("white")}>White</button>
-                            <button className="config-button" onClick={()=>handleStart("black")}>Black</button>
-                            <button className="config-button" onClick={()=>handleStart("both")}>Both</button>
-                        </div>
-                </div>
+                <div className="config-text"><p>Play as</p></div>
+                <button className="config-button" onClick={()=>handleStart("white")}>White</button>
+                <button className="config-button" onClick={()=>handleStart("black")}>Black</button>
+                <button className="config-button" onClick={()=>handleStart("both")}>Both</button>
+          </div>
         <Flashcards 
         flashcards = { flashcards }
         handleStart = { handleStart }
@@ -377,10 +418,10 @@ function App() {
   const getButtonClass = () => {
     if (leftDisplayHeader[0]==="" || leftDisplayHeader[0]===undefined || leftDisplayHeader[0]==="Play a move to explore") return "display-none";
     else return "opening-btn btn-queue";
+
   }
 
   // top right buttons 
-
   const handleFlashcards = () => {
     setTestMode(false);
     handleReset();

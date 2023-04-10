@@ -164,7 +164,7 @@
 
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding-top: 1vh;
 
@@ -180,6 +180,7 @@
   height: 70%;
   width: 25%;
   max-width: 30%;
+  margin: 0 0.5em;
 
 
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -223,7 +224,7 @@
   width: 100%;
   min-height: 25px;
   border-bottom: 1px solid black;
-  background-color: rgba(107, 153, 129, 0.05);
+  background-color: rgba(228, 230, 195, 0.29);
   
 
   display: flex;
@@ -256,6 +257,7 @@
 
 #right-display #login-button {
   width: 19%;
+
 }
 
 #right-display #flashcards-button {
@@ -274,59 +276,62 @@
   width: 31%;
 }
 
-.right-display-message-body {
-    height: 80%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-
+.color-text {
+  color: green;
 }
 
 .flashcards-config {
-  width: 100%;
-  height: 15%;
-  min-height: 15%;
+  height: 20%;
+  min-height: 20%;
+  width: 90%;
+  margin-bottom: 2%;
+  margin-top: 2%;
+  border: 1px solid black;
+  border-radius: 4px;
+
+
+  box-shadow: 0 1px 12px rgba(0, 0, 0, 0.25);
+
+
   display: flex;
-  flex-direction: row;
+  flex-direction:row;
   justify-content: flex-start;
   align-items: center;
-
-  border-bottom: 1px solid black;
+  padding: 0 0.5em;
 
 }
 
-.flashcards-config-text {
-  width: 15%;
-  height: 100%;
+.config-text {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-}
+  height: 40%;
+  width: 15%;
+  font-size: 1em;
+  border: 1px solid black;
+  background-color: rgba(228, 230, 195, 0.29);
 
-.flashcards-config-buttons {
-  width: 50%;
-  min-width: 50%;
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-}
+  
+  margin-right: .75em;
 
+
+
+}
 
 .config-button {
-  width: 33%;
-  max-width: 25%;
-  min-height: 25%;
-  max-height: 25;
-  height: 60%;
+  border: 1px solid black;
+  width: 15%;
+  max-width: 15%;
+  min-height: 40%;
+  max-height: 40%;
+  height: 40%;
+  margin-right: .25em;
+  font-size: 1em;
 }
 
 .right-display-flashcards {
-  height: 82%;
+  height: 100%;
   width: 100%;
   overflow-y: scroll;
 
@@ -337,33 +342,44 @@
 }
 
 .right-display-flashcard {
-  height: 15%;
-  min-height: 15%;
-  max-height:15;
-  width: 100%;
+  height: 20%;
+  min-height: 20%;
+  width: 90%;
+  margin-bottom: 2%;
+
+  border: 1px solid rgba(255, 255,255, 0.3);
+  border-radius: 4px;
+  box-shadow: 0 1px 12px rgba(0, 0, 0, 0.25);
+  background-color: rgba(255,255,255,0.3);
+  backdrop-filter: blur(20px);
+
   display: flex;
-  flex-direction: column;
-  border-bottom: 1px solid black;
+  flex-direction:column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 0.5em;
+
+  
 }
 
 .flashcard-name {
-  height: 100%;
+  height: 75%;
   width: 60%;
   font-size: 1vw;
   font-weight: bold;
 
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-end;
   justify-content: flex-start;
   padding-left: .5em;
 
 }
 .flashcard-moves {
   height: 100%;
-  width: 50%;
+  width: 25%;
   font-size: 1vw;
-  padding-left: 1em;
+  padding-left: .6em;
 
   display: flex;
   flex-direction: row;
@@ -371,8 +387,61 @@
   align-items: center;
 }
 
+.registration-gui {
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 2em;
+}
+
+.registration-gui > form {
+  height: 50%;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 1em;
+
+}
+
+.register-submit-button {
+  width: 50%;
+  height: 15%;
+  padding-left: .5em;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.register-submit-button > button {
+  height: 90%;
+  width: 25%;
+  border: none;
+}
+
+.register-submit-button > button:hover {
+  background-color: rgba(107, 153, 129, 0.29);
+
+}
+
+.registration-gui > form > input {
+  height: 15%;
+  width: 50%;
+  padding-left: 0.5em;
+  background-color: rgba(107, 153, 129, .05);
+  border: none;
+  border: 1px solid black;
+  border-radius: 4px;
+}
+
 .login-registration-gui {
-  height:82%;
+  height:100%;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -395,11 +464,15 @@
 .login-title >button {
   height: 15%;
 
-  padding: .75em;
+  padding: 1em;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  border: none;
+}
+.login-title >button:hover {
+  background-color: rgba(107, 153, 129, 0.29);
 
 }
 
@@ -415,9 +488,13 @@
 
 .login-registration-gui-form > input {
   margin: 1em;
-  border-radius: 5px;
-  height: 10%;
-  width: 30%;
+  border-radius: 3px;
+  padding-left: .5em;
+  height: 17%;
+  width: 40%;
+  border: 1px solid black;
+  background-color: rgba(107, 153, 129, 0.05);
+
   
 }
 
@@ -425,6 +502,11 @@
   border: none;
   height: 10%;
   width: 30%;
+  
+}
+.login-registration-gui-form > button:hover {
+  background-color: rgba(107, 153, 129, 0.29);
+
 }
 
 .right-display-message-body-noFlashcards {
@@ -447,36 +529,41 @@
   font-size: 3vh;
 }
 
-div > .app-description {
+.app-description {
+  height: 100%;
+  width: 100%;
+  font-size: 4.5vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.main-description {
   height: 75%;
   width: 75%;
-  font-size: 4.5vh;
-  margin-top: 10%;
+
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+
 }
 
-div #get-started {
-  font-size: 3.5vh;
-}
-
-.app-description p {
-  padding-bottom: 10%;
-}
-
-div > .tech-stack {
-  width: 75%;
+.tech-stack {
   height: 25%;
-  font-size: 2vh;
-  margin-bottom: 5%;
+  width: 90%;
+  font-size: .5em;
 
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
+  padding-bottom: 1em;
 }
+
+
  
 .search-openings {
   height: 100%;
@@ -501,7 +588,7 @@ div > .tech-stack {
   border: none;
   border: 1px solid black;
   border-radius: 3px;
-  padding-left: 1em;
+  padding-left: .5em;
   font-size: 1em;
   background-color: rgba(107, 153, 129, 0.05);
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -528,7 +615,7 @@ div > .tech-stack {
   margin-bottom: 2%;
 
   border: 1px solid rgba(255, 255,255, 0.3);
-  border-radius: 8px;
+  border-radius: 5px;
   box-shadow: 0 1px 12px rgba(0, 0, 0, 0.25);
   background-color: rgba(255,255,255,0.3);
   backdrop-filter: blur(20px);
@@ -551,9 +638,10 @@ div > .tech-stack {
   border: 1px solid black;
   border-radius: 5px;
   background-color: rgba(107, 153, 129, 0.05);
- 
 }
-
+.search-result button:hover {
+  background-color: rgba(107, 153, 129, 0.29);
+}
 
 
 
@@ -637,6 +725,9 @@ div > .tech-stack {
     height: 5vh;
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    margin-left: 1em;
+    margin-right: 1em;
     margin-top: 1vh;
 
   }

@@ -24,10 +24,10 @@ class SearchOpenings extends Component {
                 <div className="search-bar-container">
                     <input
                         type="text"
-                        name="username"
+                        name="opening"
                         value={this.searchData}
                         onChange={this.handleChange}
-                        placeholder="Username"
+                        placeholder="Search openings"
                         />
                 </div>
 

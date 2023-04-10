@@ -11,16 +11,6 @@ class Flashcards extends Component {
     render() { 
         return (
             <React.Fragment>
-                
-                <div className="flashcards-config">
-                        <h3 className="flashcards-config-text">Play as </h3>
-                        <div className="flashcards-config-buttons">
-                            <button className="config-button" onClick={()=>this.props.handleStart("white")}>White</button>
-                            <button className="config-button" onClick={()=>this.props.handleStart("black")}>Black</button>
-                            <button className="config-button" onClick={()=>this.props.handleStart("both")}>Both</button>
-                        </div>
-
-                </div>
 
             {
                 this.props.flashcards.map(flashcard=> (

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 class Flashcard extends Component {
-
+    
     render() { 
         return (
             <React.Fragment>
