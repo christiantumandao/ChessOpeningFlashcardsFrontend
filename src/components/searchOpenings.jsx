@@ -22,13 +22,17 @@ class SearchOpenings extends Component {
         return (
             <React.Fragment>
                 <div className="search-bar-container">
-                    <input
-                        type="text"
-                        name="opening"
-                        value={this.searchData}
-                        onChange={this.handleChange}
-                        placeholder="Search openings"
-                        />
+                    <form onSubmit={ this.handleSubmit } 
+                        className="search-bar-form">
+                        <input
+                            type="text"
+                            name="opening"
+                            value={this.searchData}
+                            onChange={this.handleChange}
+                            placeholder="Search openings"
+                            />
+                        <button >Search</button>
+                    </form>
                 </div>
 
                 <div className="search-results">
@@ -37,37 +41,6 @@ class SearchOpenings extends Component {
                         <SearchResult 
                             eco = {"A69"}
                             openingName = {" gambit"}
-                            handleAddGame = { this.props.handleAddGame }
-                        />
-                    </div>
-                    <div className="search-result">
-                        <SearchResult 
-                            eco = {"A69"}
-                            openingName = {"test gambit"}
-                            handleAddGame = { this.props.handleAddGame }
-                        />
-                    </div><div className="search-result">
-                        <SearchResult 
-                            eco = {"A69"}
-                            openingName = {"test gambit"}
-                            handleAddGame = { this.props.handleAddGame }
-                        />
-                    </div><div className="search-result">
-                        <SearchResult 
-                            eco = {"A69"}
-                            openingName = {"test gambit"}
-                            handleAddGame = { this.props.handleAddGame }
-                        />
-                    </div><div className="search-result">
-                        <SearchResult 
-                            eco = {"A69"}
-                            openingName = {"test gambit"}
-                            handleAddGame = { this.props.handleAddGame }
-                        />
-                    </div><div className="search-result">
-                        <SearchResult 
-                            eco = {"A69"}
-                            openingName = {"test gambit"}
                             handleAddGame = { this.props.handleAddGame }
                         />
                     </div>

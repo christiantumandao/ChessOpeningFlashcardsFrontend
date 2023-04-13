@@ -5,7 +5,7 @@
 
 :root {
   --headerBG:#6b9981;
-  --bodyBG: #DAD7D2;
+  --bodyBG: #DDD8C4;
 }
 
 
@@ -15,7 +15,7 @@
 
 .App {
   text-align: center;
-  
+  overflow: hidden;
   height: 100vh;
   
 }
@@ -334,6 +334,7 @@
   height: 100%;
   width: 100%;
   overflow-y: scroll;
+  padding-top: .5em;
 
   display: flex;
   flex-direction: column;
@@ -386,6 +387,78 @@
   justify-content: flex-start;
   align-items: center;
 }
+
+.user-profile-gui {
+  height: 100%;
+  width: 100%;
+
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+
+}
+
+.profile-line {
+  padding-bottom: .5em;
+  padding-left: .5em;
+}
+.user-settings {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.24);
+  height:25%;
+  width: 100%;
+  padding-top: .5em;
+  font-size: 2.75vh;
+
+  text-align: left;
+}
+
+.user-statistics {
+  font-size: 2.25vh;
+  height:20%;
+  width: 100%;
+  text-align: left;
+
+
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+.left-statistics {
+  height: 100%;
+  width: 50%;
+
+  text-align: right;
+  padding-right: 1.5em;
+  border-right:1px solid rgba(0, 0, 0, 0.24);
+}
+
+.right-statistics {
+  height: 100%;
+  width: 50%;
+  text-align: left;
+  padding-left: 1.5em;
+}
+
+.bottom-statistics {
+  height: 55%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-content: flex-start;
+  padding-bottom: 1em;
+}
+.pie-chart-container {
+  background-color: black;
+  width: 50%;
+  height: auto;
+}
+
 
 .registration-gui {
   height: 100%;
@@ -582,16 +655,49 @@
 
 }
 
-.search-bar-container > input {
-  height: 60%;
-  width: 90%;
+.search-bar-container > form {
+  height: 90%;
+  width: 95%;
   border: none;
-  border: 1px solid black;
+
   border-radius: 3px;
   padding-left: .5em;
   font-size: 1em;
+
+
+}
+.search-bar-form {
+  height: 100%;
+  width: 100%;
+  
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items:center;
+  gap: .5em;
+}
+.search-bar-form > input {
+  width: 80%;
+  height: 80%;
+  border: none;
+  border: 1px solid black;
+  font-size: 1em;
+  border-radius: 3px;
+  padding-left: .5em;
   background-color: rgba(107, 153, 129, 0.05);
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.search-bar-form > button {
+  height: 80%;
+  width: 20%;
+  border: 1px solid black;
+  border-radius: 3px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+}
+.search-bar-form > button:hover {
+  background-color: rgba(107, 153, 129, 0.19);
+
 
 }
 

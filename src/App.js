@@ -4,9 +4,12 @@ import { useState, useEffect } from 'react';
 
 import RightDisplay from "./components/rightDisplay";
 import Flashcard from "./components/flashcard";
+import RegistrationGUI from './components/registrationGUI';
+import LoginRegistrationGUI from './components/loginRegistrationGUI';
 import Flashcards from "./components/flashcards";
 import SearchOpenings from './components/searchOpenings';
 import DefaultMessage from './components/defaultMessage';
+import Deck from './components/deck';
 import { Chessboard } from 'react-chessboard';
 import { Chess } from "chess.js";
 import axios from 'axios';
@@ -15,8 +18,8 @@ function App() {
 
   // game references
   const [game, setGame] = useState(new Chess());
-  const [flashcards, setFlashcards] = useState([]);
-  const [currOpening, setCurrOpening] = useState({});
+  const [flashcards, setFlashcards] = useState([]); // list of opening objects
+  const [currOpening, setCurrOpening] = useState({}); // opening object
 
   // game settings
   const [colorOrientation, setOrientation] = useState('white');
@@ -35,8 +38,15 @@ function App() {
   const [testColor, setTestColor] = useState("white");
   const [showBorder, setShowBorder] = useState(false);
 
+  // user state 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState({});
   // functions ===============================================================
   
+  const getProfileOrLogIn = () => {
+    if (isLoggedIn===true) return "Profile";
+    else return "Login";
+  }
 
   // USE EFFECTS: called for every change in board position / reset
   useEffect(()=> {
@@ -122,8 +132,9 @@ function App() {
               newGame.loadPgn(game.pgn());
               newGame.move(correctSequence[temp]);
               setGame(newGame);  
-              setMoveIndex(moveIndex+1);                 
-            }, 1000)
+              setMoveIndex(moveIndex+1);       
+              console.log("last move is autoplayed");          
+            }, 2000)
         }
         //if user playing as white made correct move
         else if (testColor==="white" && temp % 2 !== 0) {
@@ -154,6 +165,7 @@ function App() {
     
     
   }, [game.fen(), testColor])
+
 
   const displayBorder = () => {
     setShowBorder(true);
@@ -191,105 +203,52 @@ function App() {
 
   const getDeck = () => {
     return (
-      <div className="right-display-flashcards">
-          {
-                flashcards.map(flashcard=> (
-                    <div className="right-display-flashcard deck-flashcard" key ={flashcard.eco}>
-                        <Flashcard 
-                            openingName = {flashcard.openingName}
-                            eco = {flashcard.eco}
-                        />
-                    </div>
-                ))
-            }
-      </div>
+      <Deck flashcards = {flashcards} />
     );
   }
 
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-    firstName: "",
-    lastName: "",
-  })
-  const handleSubmit = () => {
-    console.log("handing submit");
+  const handleRegistrationSubmit = (data) => {
+    console.log("user data:", data);
+    setUser(data);
+    setIsLoggedIn(true);
+    setRightDisplayHeader("Hello" +" "+ data.firstName);
+    
+    
   }
-  const handleChange =()=>{
-  }
+
   const getRegistrationGUI = () => {
     return (
       <div className="registration-gui">
-        <form 
-            className="registration-gui-form"
-            onSubmit={handleSubmit}>
-              Registration
-          <input
-            type="text"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-            placeholder="First Name"
+          <RegistrationGUI 
+          handleRegistrationSubmit = {handleRegistrationSubmit}
           />
-          <input
-            type="text"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            placeholder="Last Name"
-          />
-          <input
-            type="text"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            placeholder="Username"
-          />
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Password"
-          />
-          <div className="register-submit-button">
-          <button  type="submit">Register</button>
-            </div>
-        </form>
       </div>
     );
   }
   const handleRegister = () =>{
     setRightDisplayBody(getRegistrationGUI());
   }
+
+  const handleLoginSubmit = (loginData) => {
+    console.log("login credentials recieved: ", loginData);
+    setUser(loginData)
+    setIsLoggedIn(true);
+    setRightDisplayHeader("Hello "+loginData.firstName);
+    setRightDisplayBody(getDefaultMessage());
+
+
+  }
+
+  const loadInUserData =()=> {
+
+  }
+
   const getLoginRegistrationGUI = () => {
     return (
-      
-      <div class="right-display-message-body login-registration-gui">
-        <div className="login-title">
-          <div>Don't have an account? Register:</div>
-          <button onClick={ handleRegister }>Register</button>
-        </div>
-        <form 
-            className="login-registration-gui-form"
-            onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            placeholder="Username"
-          />
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Password"
-          />
-          <button type="submit">Login</button>
-        </form>
-
+      <div className="right-display-message-body login-registration-gui">
+          <LoginRegistrationGUI 
+              handleLoginSubmit = { handleLoginSubmit }
+              handleRegister = { handleRegister }/>
       </div>
     );
   }
@@ -328,7 +287,7 @@ function App() {
             <button id="flashcards-button" onClick = { () => handleFlashcards() }>Flashcards</button>
             <button id="explore-button" onClick= { () => handleExploreOpenings() }>Explore Openings</button>
             <button id="search-button" onClick = { () => handleSearchOpenings() }>Search Openings</button>
-            <button id="login-button" onClick = { () => handleLoginRegister()}>Login</button>
+            <button id="login-button" onClick = { () => handleLoginRegister()}>{getProfileOrLogIn()}</button>
         </div>
 
 
@@ -374,13 +333,28 @@ function App() {
       }
   }
 
+  const [isVisible, setIsVisible] = useState(true);
+
   //add opening to flashcards (object w/ 4 pairs)
   const handleAddGame = () => {
 
-    console.log("adding opening:",currOpening);
-    let newFlashcards = flashcards;
-    newFlashcards.push(currOpening);
-    setFlashcards(newFlashcards);
+    let alreadyAdded=false;
+    flashcards.forEach(flashcard=>{
+      if (flashcard.fen===currOpening.fen) {
+        alert("opening already added!");
+        alreadyAdded=true;
+      }
+    });
+    if (alreadyAdded===false) {
+      let newFlashcards = flashcards;
+      newFlashcards.push(currOpening);
+      setFlashcards(newFlashcards);
+    }
+
+    console.log("setting visibility to false");
+    setIsVisible(false);
+
+
   }
 
 
@@ -416,9 +390,18 @@ function App() {
 
   // getting button class for top left button (add to game queue)
   const getButtonClass = () => {
-    if (leftDisplayHeader[0]==="" || leftDisplayHeader[0]===undefined || leftDisplayHeader[0]==="Play a move to explore") return "display-none";
-    else return "opening-btn btn-queue";
 
+  let flashcardFound=false;
+  let currFen = game.fen();
+  currFen = currFen.slice(0,-6);
+  flashcards.forEach(flashcard => {
+    if (currFen === flashcard.fen) flashcardFound=true;
+  });
+
+    if (leftDisplayHeader[0]==="" || leftDisplayHeader[0]===undefined || leftDisplayHeader[0]==="Play a move to explore") 
+      return "display-none";
+    if (flashcardFound===true) return "display-none";
+    return "opening-btn btn-queue";
   }
 
   // top right buttons 
@@ -441,7 +424,6 @@ function App() {
   }
 
   useEffect(()=> {
-    console.log(rightDisplayBody);
   },[rightDisplayBody, testMode])
 
   const handleSearchOpenings = () => {
@@ -453,8 +435,43 @@ function App() {
   const handleLoginRegister = () => {
     setTestMode(false);
     handleReset();
-    setRightDisplayBody(getLoginRegistrationGUI());
+    if (isLoggedIn===true) {
+      setRightDisplayBody(getUserProfileGUI());
+    }
+    else setRightDisplayBody(getLoginRegistrationGUI());
   }
+
+  const getUserProfileGUI = () => {
+    return (
+      <div className="user-profile-gui">
+
+            <div className="user-settings">
+              <p className="profile-line">Username:  {" "+ user.username}</p>
+              <p className="profile-line">First Name: {user.firstName}</p>
+              <p className="profile-line">Last Name: {user.lastName}</p>
+            </div>  
+            
+            <div className="user-statistics">
+              <div className="left-statistics">
+                <p className="profile-line">Flashcards  correct: {user.corrects}</p>
+                <p className="profile-line">Flashcards  incorrect: {user.fails}</p>
+                <p className="profile-line">Ratio:{user.corrects/user.fails}</p>
+              </div>
+              <div className="right-statistics">
+                <p className="profile-line">Flashcards added: {flashcards.length}</p>
+              </div>
+            </div>
+
+            <div className="bottom-statistics">
+                <div className="pie-chart-container"></div>
+            </div>
+
+          
+      </div>
+    );
+  }
+
+
 
 
   /**
@@ -506,9 +523,8 @@ function App() {
   
   return (
     <div className="App">
-
           <div id="body">
-          
+
             <div id="left-display">
 
               <div id="opening-buttons">
