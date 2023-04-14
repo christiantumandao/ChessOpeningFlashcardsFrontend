@@ -8,6 +8,7 @@ class Deck extends Component {
                   this.props.flashcards.map(flashcard => (
                       <div className="right-display-flashcard deck-flashcard" key ={flashcard.eco}>
                           <Flashcard 
+                          
                               openingName = {flashcard.openingName}
                               eco = {flashcard.eco}
                           />

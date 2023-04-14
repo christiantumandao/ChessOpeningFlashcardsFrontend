@@ -5,13 +5,20 @@ class SearchResults extends Component {
     render() { 
         return (
             <React.Fragment>
-                <div>
+                <div className="search-result-name">
                     [{this.props.eco}] 
                     {this.props.openingName}
                 </div>
-                <div>
-                    <button>Add game</button>
-                </div>
+
+                <button className = "search-result-button"
+                    onClick = { () => { this.props.handleAddGame({
+                    openingName: this.props.openingName,
+                    fen: this.props.fen,
+                    moves: this.props.moves,
+                    eco: this.props.eco
+                })}}
+                >Add game</button>
+
             </React.Fragment>
         );
     }

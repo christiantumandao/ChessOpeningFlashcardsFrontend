@@ -1,3 +1,8 @@
+// TO DO 4/14
+/**
+ * Add functionality to "remove game"
+ */
+
 
 import './App.css';
 import { useState, useEffect } from 'react';
@@ -134,7 +139,7 @@ function App() {
               setGame(newGame);  
               setMoveIndex(moveIndex+1);       
               console.log("last move is autoplayed");          
-            }, 2000)
+            }, 1000)
         }
         //if user playing as white made correct move
         else if (testColor==="white" && temp % 2 !== 0) {
@@ -202,6 +207,7 @@ function App() {
   const [rightDisplayBody, setRightDisplayBody] = useState(getDefaultMessage());
 
   const getDeck = () => {
+    console.log("getting deck:",flashcards);
     return (
       <Deck flashcards = {flashcards} />
     );
@@ -212,8 +218,7 @@ function App() {
     setUser(data);
     setIsLoggedIn(true);
     setRightDisplayHeader("Hello" +" "+ data.firstName);
-    
-    
+    setRightDisplayBody(getDefaultMessage());
   }
 
   const getRegistrationGUI = () => {
@@ -236,10 +241,30 @@ function App() {
     setRightDisplayHeader("Hello "+loginData.firstName);
     setRightDisplayBody(getDefaultMessage());
 
+    let uid = loginData.id;
+    let axios_url = "http://localhost:5000/api/added-openings/"+String(uid);
 
-  }
+  
+    console.log("loading in flashcards...,",axios_url);
+    axios.get(axios_url)
+    .then(response => {
+      let user_openings = response.data;
 
-  const loadInUserData =()=> {
+      let newFlashcards = flashcards;
+      user_openings.forEach(opening => {
+        newFlashcards.push({
+          moves: opening.moves, 
+          fen: opening.fen, 
+          openingName: opening.openingName, 
+          eco: opening.eco
+        })
+      });
+      setFlashcards(newFlashcards);
+      console.log("flash cards successfully loaded for user",uid, flashcards);
+    })
+    .catch(error => console.error(error));
+  
+
 
   }
 
@@ -262,10 +287,14 @@ function App() {
                 <button className="config-button" onClick={()=>handleStart("black")}>Black</button>
                 <button className="config-button" onClick={()=>handleStart("both")}>Both</button>
           </div>
-        <Flashcards 
-        flashcards = { flashcards }
-        handleStart = { handleStart }
-        />
+          <div className="flashcards">
+            <Flashcards 
+            flashcards = { flashcards }
+            handleStart = { handleStart }
+            />
+          </div>
+
+        
       </div>
       
     );
@@ -304,7 +333,7 @@ function App() {
     return (
       <div className="search-openings">
         <SearchOpenings 
-            handleAddGame = { handleAddGame }
+            handleAddGame = { handleAddGameBySearch }
         />
       </div>
       
@@ -335,24 +364,76 @@ function App() {
 
   const [isVisible, setIsVisible] = useState(true);
 
-  //add opening to flashcards (object w/ 4 pairs)
-  const handleAddGame = () => {
-
-    let alreadyAdded=false;
-    flashcards.forEach(flashcard=>{
-      if (flashcard.fen===currOpening.fen) {
-        alert("opening already added!");
-        alreadyAdded=true;
+  const handleAddGameBySearch = (opening) => {
+    console.log("Adding by search")
+    // check if game is already added
+    let isAdded = false;
+    let opening_fen = opening.fen;
+    opening_fen = opening_fen.slice(0,-6);
+    
+    flashcards.forEach(flashcard => {
+      if (flashcard.fen === opening_fen) {
+        alert("Opening already added!");
+        isAdded=true;
       }
     });
-    if (alreadyAdded===false) {
+
+    // add game if not already added 
+    if (isAdded===false) {
+      // add to local state
       let newFlashcards = flashcards;
-      newFlashcards.push(currOpening);
+      newFlashcards.push(opening);
       setFlashcards(newFlashcards);
+
+      // add to user profile
+      if (isLoggedIn===true) {
+        let openingToAdd = opening;
+        openingToAdd.uid = user.id;
+        axios.post("http://localhost:5000/api/added-openings/new-opening", openingToAdd)
+        .then(response => console.log("Successfully added", response.data))
+        .catch(error => console.error(error));
+      }
     }
 
-    console.log("setting visibility to false");
-    setIsVisible(false);
+  }
+
+  const handleAddGameByPosition = (pos) => {
+    pos = pos.slice(0,-6);
+    console.log("state fen", currOpening.fen);
+    // check if game is already added 
+    let alreadyAdded = false;
+    flashcards.forEach(flashcard => {
+
+      if (flashcard.fen === pos) {
+        alert("Flashcard already added!");
+        alreadyAdded=true;
+      }
+
+    });
+
+    // adding game if not yet added
+    if (alreadyAdded === false) {
+      //adding to local state
+      let newFlashcards = flashcards;
+      newFlashcards.push(currOpening);  // curr opening is updated every time board position is changed
+      setFlashcards(newFlashcards);
+
+      //adding to user profile if logged in
+      if (isLoggedIn === true) {
+        let openingToAdd = {
+          uid: user.id,
+          fen: currOpening.fen,
+          eco: currOpening.eco,
+          moves: currOpening.moves,
+          openingName: currOpening.openingName
+        }
+        axios.post("http://localhost:5000/api/added-openings/new-opening", openingToAdd)
+        .then(response => {
+          console.log("Added", response.data, "to user profile")
+        })
+        .catch(error => console.error(error)); 
+      }
+    }
 
 
   }
@@ -391,16 +472,14 @@ function App() {
   // getting button class for top left button (add to game queue)
   const getButtonClass = () => {
 
-  let flashcardFound=false;
   let currFen = game.fen();
   currFen = currFen.slice(0,-6);
   flashcards.forEach(flashcard => {
-    if (currFen === flashcard.fen) flashcardFound=true;
+    if (currFen === flashcard.fen) { return "display-none"}
   });
 
     if (leftDisplayHeader[0]==="" || leftDisplayHeader[0]===undefined || leftDisplayHeader[0]==="Play a move to explore") 
       return "display-none";
-    if (flashcardFound===true) return "display-none";
     return "opening-btn btn-queue";
   }
 
@@ -446,9 +525,15 @@ function App() {
       <div className="user-profile-gui">
 
             <div className="user-settings">
-              <p className="profile-line">Username:  {" "+ user.username}</p>
-              <p className="profile-line">First Name: {user.firstName}</p>
-              <p className="profile-line">Last Name: {user.lastName}</p>
+              <div className="left-settings">
+                <p className="profile-line">First Name: {user.firstName}</p>
+                <p className="profile-line">Last Name: {user.lastName}</p>
+              </div>
+              <div className="right-settings">
+                <p className="profile-line">Username:  {" "+ user.username}</p>
+                <p className="profile-line">User ID: {user.id}</p>
+              </div>
+
             </div>  
             
             <div className="user-statistics">
@@ -530,7 +615,7 @@ function App() {
               <div id="opening-buttons">
                       <button 
                         className={ getButtonClass() }
-                        onClick = { ()=>handleAddGame(game.fen()) }
+                        onClick = { ()=>handleAddGameByPosition(game.fen()) }
                       
                       >
                         Add to flashcards</button>

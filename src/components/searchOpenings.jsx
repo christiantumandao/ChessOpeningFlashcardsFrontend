@@ -1,56 +1,77 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import SearchResult from './searchResult';
-class SearchOpenings extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            searchData: {}
-        };
-    }
-    
-    handleSubmit = () => {
-        console.log("submit");
-    }
-    handleChange = () => {
-        console.log("change");
+import axios from 'axios';
 
+function SearchOpenings(props) {
+
+    const [search, setSearch] = useState("");
+    const [searchResults, setSearchResults] = useState([]);
+    
+    const handleSearch =  (e) => {
+        e.preventDefault();
+        let query = search;
+        setSearch(search);
+        let axios_url = "http://localhost:5000/api/openings/find-opening?search="+String(search);
+        try {
+            axios.get(axios_url)
+            .then(response => {
+                //setSearchResults([response.data]);
+                console.log("search results: ", response);
+                setSearchResults(response.data);
+            })
+            .catch(error => {console.error(error)});
+        }
+        catch (error) {
+            console.error("Error searching for result: ", error);
+        }
+    }
+
+    const handleChange =(searchRes)=> {
+        setSearch(searchRes);
     }
 
     // component inside className search-openings
-    render() { 
-
-        return (
-            <React.Fragment>
-                <div className="search-bar-container">
-                    <form onSubmit={ this.handleSubmit } 
-                        className="search-bar-form">
-                        <input
+    return (
+        <React.Fragment>
+            <div className="search-bar-container">
+                <form className="search-bar-form" onSubmit={ handleSearch }>
+                    <input
                             type="text"
-                            name="opening"
-                            value={this.searchData}
-                            onChange={this.handleChange}
+                            value={search}
+                            onChange={ (e) => handleChange(e.target.value) }
                             placeholder="Search openings"
                             />
-                        <button >Search</button>
-                    </form>
-                </div>
+                    <button className="search-bar-button"
+                        type="submit"
+                    > Search </button>
 
-                <div className="search-results">
+                </form>
                     
-                    <div className="search-result">
-                        <SearchResult 
-                            eco = {"A69"}
-                            openingName = {" gambit"}
-                            handleAddGame = { this.props.handleAddGame }
-                        />
-                    </div>
 
-  
-                </div>
+            </div>
 
-            </React.Fragment>
-        );
-    }
+            <div className="search-results">
+                {
+                    searchResults.map(opening => (
+                        <div className="search-result" key={opening.moves}>
+                            <SearchResult key = {opening.moves}
+                            
+                            eco = {opening.eco}
+                            openingName = {opening.openingName}
+                            fen = {opening.fen}
+                            moves = {opening.moves}
+
+                            handleAddGame = { props.handleAddGame }
+                        
+                            />
+                        </div>
+                    ))
+                }
+            </div>
+
+        </React.Fragment>
+    );
+
 }
  
 export default SearchOpenings;

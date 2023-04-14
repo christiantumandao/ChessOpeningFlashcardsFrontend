@@ -15,6 +15,7 @@ class DefaultMessage extends Component {
                             Start by <span className="color-text">playing a move </span> 
                             or clicking the "<span className="color-text">Search Openings</span>" tab.
                         </p>
+                        <p id="sign-in-message">Sign in to save your added flashcards and track statistics!</p>
                     </div>
                     <div className="tech-stack">
                         <p>This web application uses the lichess api for chess openings.</p>

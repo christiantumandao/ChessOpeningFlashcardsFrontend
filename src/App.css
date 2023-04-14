@@ -1,7 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300&family=Montserrat&family=Unna&display=swap');
 * {
   margin: 0;
   padding: 0;
+  font-family: 'Montserrat', sans-serif;
 }
+
 
 :root {
   --headerBG:#6b9981;
@@ -17,6 +20,7 @@
   text-align: center;
   overflow: hidden;
   height: 100vh;
+
   
 }
 
@@ -24,7 +28,6 @@
   height: 5%;
   width: 100%;
 
-  background-color: var(--bodyBG);
 
   display: flex;
   flex-direction: row;
@@ -39,6 +42,7 @@
 
 /** children are left-display and right-display*/
 #body {
+  
     height: 100%;
     width: 100%;
     min-height:90%;
@@ -50,6 +54,8 @@
 
 
     background-color: var(--bodyBG);
+    background-color: rgba(0, 0, 0, 0.24);
+
 
     overflow-y: scroll;
 
@@ -144,6 +150,8 @@
 #board {
   height: 400px;
   width: 400px;
+  border: 1px solid black;
+  border-top: none;
 
   display: flex;
   flex-direction: column;
@@ -288,9 +296,9 @@
   margin-top: 2%;
   border: 1px solid black;
   border-radius: 4px;
-
-
   box-shadow: 0 1px 12px rgba(0, 0, 0, 0.25);
+
+
 
 
   display: flex;
@@ -306,17 +314,13 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  
   height: 40%;
   width: 15%;
   font-size: 1em;
   border: 1px solid black;
   background-color: rgba(228, 230, 195, 0.29);
-
-  
   margin-right: .75em;
-
-
-
 }
 
 .config-button {
@@ -328,10 +332,25 @@
   height: 40%;
   margin-right: .25em;
   font-size: 1em;
+  border-radius: 4px;
+}
+
+.flashcards {
+
+  height: 96%;
+
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1%;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .right-display-flashcards {
-  height: 100%;
+
+  height: 96%;
   width: 100%;
   overflow-y: scroll;
   padding-top: .5em;
@@ -343,10 +362,11 @@
 }
 
 .right-display-flashcard {
-  height: 20%;
-  min-height: 20%;
+  height: 25%;
+  min-height: 25%;
   width: 90%;
   margin-bottom: 2%;
+  
 
   border: 1px solid rgba(255, 255,255, 0.3);
   border-radius: 4px;
@@ -355,37 +375,68 @@
   backdrop-filter: blur(20px);
 
   display: flex;
-  flex-direction:column;
+  flex-direction:row;
   justify-content: center;
   align-items: flex-start;
   padding: 0 0.5em;
+}
 
-  
+.flashcard-left {
+  width: 85%;
+  height: 100%;
+  padding-right: .75em;
+}
+.flashcard-right {
+  width: 15%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.flashcard-right > button {
+  width: 100%;
+  height: 50%;
+  background-color: rgba(176, 65, 62, 0.5);
+  border: 1px solid black;
+  border-radius: 4px;
+  font-size: .7em;
+}
+.flashcard-right > button:hover {
+  background-color: rgba(176, 65, 62, 0.75);
 }
 
 .flashcard-name {
-  height: 75%;
-  width: 60%;
-  font-size: 1vw;
+  height: 30%;
+  width: 100%;
+  font-size: 1em;
   font-weight: bold;
+  text-align: left;
 
   display: flex;
   flex-direction: row;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: flex-start;
-  padding-left: .5em;
+  padding-left: .2em;
+  padding-top: 1em;
+  padding-bottom: .5em;
+
 
 }
 .flashcard-moves {
-  height: 100%;
-  width: 25%;
-  font-size: 1vw;
-  padding-left: .6em;
+
+  height: 40%;
+  width: 100%;
+  font-size: .75em;
+  padding-left: .5em;
 
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+  text-align: left;
+  overflow: scroll;
+
 }
 
 .user-profile-gui {
@@ -410,8 +461,32 @@
   width: 100%;
   padding-top: .5em;
   font-size: 2.75vh;
-
   text-align: left;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.left-settings {
+  width: 50%;
+  height:100%;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.right-settings {
+  width: 50%;
+  height: 100%;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .user-statistics {
@@ -621,7 +696,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  font-size: .95em;
 
+}
+
+#sign-in-message {
+  padding-top:1em;
+  font-size: .75em;
 }
 
 .tech-stack {
@@ -655,30 +736,20 @@
 
 }
 
-.search-bar-container > form {
-  height: 90%;
-  width: 95%;
-  border: none;
-
-  border-radius: 3px;
-  padding-left: .5em;
-  font-size: 1em;
-
-
-}
 .search-bar-form {
-  height: 100%;
-  width: 100%;
-  
+  width: 92.5%;
+  height: 60%;
+
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items:center;
-  gap: .5em;
+  align-items: center;
+  gap: 2%;
 }
+
 .search-bar-form > input {
-  width: 80%;
-  height: 80%;
+  width: 90%;
+  height: 95%;
   border: none;
   border: 1px solid black;
   font-size: 1em;
@@ -689,7 +760,7 @@
 }
 .search-bar-form > button {
   height: 80%;
-  width: 20%;
+  width: 18%;
   border: 1px solid black;
   border-radius: 3px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -731,14 +802,22 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 0.5em;
-
-
 }
+
+.search-result-name {
+  width: 80%;
+  text-align: left;
+  padding-right: 0.5em;
+}
+
 
 .search-result > div {
   font-size: 2.5vh;
 }
-.search-result button {
+.search-result .search-result-button {
+  width: 15%;
+  height: 80%;
+  
   font-size: 2vh;
   padding: 0.5em;
   border: 1px solid black;
