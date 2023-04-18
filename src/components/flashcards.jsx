@@ -20,6 +20,7 @@ class Flashcards extends Component {
                             eco = {flashcard.eco}
                             moves ={flashcard.moves}
                             fen = {flashcard.fen}
+                            handleRemoveGame = {this.props.handleRemoveGame}
                         />
 
                     </div>

@@ -15,7 +15,7 @@ function LoginRegistrationGUI(props) {
 
         const handleSubmit = (e) => {
             e.preventDefault();
-            axios.get("http://localhost:5000/api/users/all-users")
+            axios.get("http://chessopeningflashcards.us-east-2.elasticbeanstalk.com/api/users/all-users")
             .then( response => {
                 let res = response.data;
                 let validLogin=false;

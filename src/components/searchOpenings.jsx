@@ -9,9 +9,8 @@ function SearchOpenings(props) {
     
     const handleSearch =  (e) => {
         e.preventDefault();
-        let query = search;
         setSearch(search);
-        let axios_url = "http://localhost:5000/api/openings/find-opening?search="+String(search);
+        let axios_url = "http://chessopeningflashcards.us-east-2.elasticbeanstalk.com/api/openings/find-opening?search="+String(search);
         try {
             axios.get(axios_url)
             .then(response => {

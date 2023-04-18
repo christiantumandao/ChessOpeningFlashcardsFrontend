@@ -18,8 +18,9 @@ class DefaultMessage extends Component {
                         <p id="sign-in-message">Sign in to save your added flashcards and track statistics!</p>
                     </div>
                     <div className="tech-stack">
-                        <p>This web application uses the lichess api for chess openings.</p>
-                        <p>Built on React, Axios, Spring Boot MVC, Spring data jpa, AWS RDS (mySQL), AWS S3, and AWS EBS</p>
+                        <p>This web application uses ECO for chess openings.</p>
+                        <p>Built on ReactJS, Axios, Spring Boot MVC, Spring Data JPA, and AWS RDS (mySQL)</p>
+                        <p>Deployed on AWS S3, and AWS EBS</p>
                         <p>Christian Tumandao</p>
                     </div>
                 </div>

@@ -10,7 +10,10 @@ class Flashcard extends Component {
                     <div className="flashcard-moves">{ this.props.moves }</div>
                 </div>
                 <div className="flashcard-right">
-                    <button>Remove</button>
+                    <button 
+                    onClick ={()=> this.props.handleRemoveGame(this.props.fen)}
+                    >
+                        Remove</button>
                 </div>
 
 

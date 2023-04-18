@@ -23,7 +23,7 @@ function RegistrationGUI({ handleRegistrationSubmit }) {
 
     const handleSubmit = (e) => {
       e.preventDefault();
-      let axios_url ="http://localhost:5000/api/users/all-users";
+      let axios_url ="http://chessopeningflashcards.us-east-2.elasticbeanstalk.com/api/users/all-users";
       axios(axios_url)
       .then(response => {
         let res = response.data;
@@ -37,7 +37,7 @@ function RegistrationGUI({ handleRegistrationSubmit }) {
           alert("Username already exists! Please try a different one");
         }
         else { //username does not exist yet, will register user w/ post request
-          let axios_url = "http://localhost:5000/api/users/new-user";
+          let axios_url = "http://chessopeningflashcards.us-east-2.elasticbeanstalk.com/api/users/new-user";
           axios.post( axios_url,
           {
             firstName:firstName,
